@@ -399,7 +399,7 @@ function checkAdminAuth() {
   document.getElementById('adminLoginForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
     const pass = document.getElementById('adminPassInput').value;
-    const currentAdminPass = localStorage.getItem('shopAdminPass') || 'admin123';
+    const currentAdminPass = 'thandz12';
     if (pass === currentAdminPass) {
       sessionStorage.setItem('adminAuthenticated', 'true');
       if (overlay) overlay.style.display = 'none';
