@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopOnline - Landing page thương mại điện tử với sản phẩm nổi bật, giỏ hàng động và trải nghiệm mobile mượt mà.">
+  <meta name="keywords" content="ecommerce, landing page, shop online, mua sắm, sản phẩm, giỏ hàng">
+  <meta name="theme-color" content="#7C3AED">
+  <title>ShopOnline – Trang chủ</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><i class="fas fa-store"></i> ShopOnline</a>
+      </div>
+      <nav class="nav" id="mainNav">
+        <ul>
+          <li><a href="index.html" class="active">Trang chủ</a></li>
+          <li><a href="#products">Sản phẩm</a></li>
+          <li><a href="orders.html">Đơn hàng</a></li>
+          <li><a href="https://zalo.me/0705634177" target="_blank">Liên hệ</a></li>
+        </ul>
+      </nav>
+      <div class="cart-icon">
+        <a href="#" id="cartToggle" aria-label="Giỏ hàng">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== PROMO BAR ===== -->
+  <div class="promo-bar">
+    <div class="promo-track">
+      <span class="promo-item"><i class="fas fa-truck"></i> Miễn phí vận chuyển đơn từ 500K</span>
+      <span class="promo-item"><i class="fas fa-redo"></i> Đổi trả trong 7 ngày</span>
+      <span class="promo-item"><i class="fas fa-shield-alt"></i> Bảo hành chính hãng</span>
+      <span class="promo-item"><i class="fas fa-bolt"></i> Flash Sale mỗi ngày 12h</span>
+      <span class="promo-item"><i class="fas fa-headset"></i> Hỗ trợ 24/7</span>
+      <span class="promo-item"><i class="fas fa-gift"></i> Quà tặng kèm đơn trên 1 triệu</span>
+      <!-- duplicate for seamless loop -->
+      <span class="promo-item"><i class="fas fa-truck"></i> Miễn phí vận chuyển đơn từ 500K</span>
+      <span class="promo-item"><i class="fas fa-redo"></i> Đổi trả trong 7 ngày</span>
+      <span class="promo-item"><i class="fas fa-shield-alt"></i> Bảo hành chính hãng</span>
+      <span class="promo-item"><i class="fas fa-bolt"></i> Flash Sale mỗi ngày 12h</span>
+      <span class="promo-item"><i class="fas fa-headset"></i> Hỗ trợ 24/7</span>
+      <span class="promo-item"><i class="fas fa-gift"></i> Quà tặng kèm đơn trên 1 triệu</span>
+    </div>
+  </div>
+
+  <!-- ===== BANNER SLIDER ===== -->
+  <section class="banner">
+    <div class="slider-container">
+      <div class="slider" id="slider">
+        <div class="slide" style="background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);">
+          <div class="slide-content">
+            <h2>🎉 Sale Hè Bùng Nổ</h2>
+            <p>Giảm đến 50% toàn bộ áo thun & hoodie — Số lượng có hạn!</p>
+            <a href="#products" class="btn btn-primary">Mua ngay →</a>
+          </div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);">
+          <div class="slide-content">
+            <h2>🔥 Bộ Sưu Tập Mới</h2>
+            <p>Phong cách trẻ trung, năng động — Ra mắt hôm nay</p>
+            <a href="#products" class="btn btn-primary">Xem thêm →</a>
+          </div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #0EA5E9 0%, #6366F1 100%);">
+          <div class="slide-content">
+            <h2>🚚 Giao Hàng Miễn Phí</h2>
+            <p>Cho mọi đơn hàng từ 500.000đ — Giao trong 2–3 ngày</p>
+            <a href="#products" class="btn btn-primary">Mua sắm ngay →</a>
+          </div>
+        </div>
+      </div>
+      <button class="slider-btn prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+      <button class="slider-btn next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+      <div class="dots" id="dots">
+        <span class="dot active" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES BAR ===== -->
+  <section class="features-bar">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-truck"></i></div>
+          <h4>Miễn phí vận chuyển</h4>
+          <p>Đơn hàng từ 500K</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-redo-alt"></i></div>
+          <h4>Đổi trả dễ dàng</h4>
+          <p>Trong vòng 7 ngày</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Bảo hành chính hãng</h4>
+          <p>100% hàng chất lượng</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-headset"></i></div>
+          <h4>Hỗ trợ 24/7</h4>
+          <p>Chat & Zalo tức thì</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Nổi bật</div>
+        <h2 class="section-title">🛍️ Sản phẩm hot nhất</h2>
+        <p class="section-subtitle">Khám phá các sản phẩm chất lượng cao với giá tốt nhất thị trường</p>
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Tất cả</button>
+        <button class="filter-btn" data-filter="áo">Áo</button>
+        <button class="filter-btn" data-filter="quần">Quần</button>
+        <button class="filter-btn" data-filter="giày">Giày</button>
+        <button class="filter-btn" data-filter="váy">Váy</button>
+        <button class="filter-btn" data-filter="phụ kiện">Phụ kiện</button>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 ShopOnline – Made with <i class="fas fa-heart" style="color:#EC4899;"></i> by Trần Công Thành</p>
+      <div class="footer-contact">
+        <a href="https://zalo.me/0705634177" target="_blank"><i class="fas fa-comment"></i> Zalo: 0705634177</a>
+        <a href="mailto:dtc235200687@ictu.edu.vn"><i class="fas fa-envelope"></i> dtc235200687@ictu.edu.vn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== CART SIDEBAR ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-bag"></i> Giỏ hàng của bạn</h3>
+      <button class="close-cart" id="closeCart" aria-label="Đóng">&times;</button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng tiền:</span>
+        <span id="cartTotal">0đ</span>
+      </div>
+      <a href="checkout.html" class="btn btn-success btn-full">
+        <i class="fas fa-lock"></i> Thanh toán ngay
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== CHATBOT ===== -->
+  <div class="chatbot" id="chatbot">
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Mở chat">
+      <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="chatbot-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+          <h4>ShopOnline Assistant</h4>
+          <span class="chatbot-status">● Trực tuyến</span>
+        </div>
+        <button class="chatbot-close" id="chatbotClose">&times;</button>
+      </div>
+      <div class="chatbot-body" id="chatbotBody"></div>
+      <div class="chatbot-quick">
+        <button data-q="Giá sản phẩm như thế nào?">Giá cả</button>
+        <button data-q="Phí vận chuyển thế nào?">Vận chuyển</button>
+        <button data-q="Chính sách đổi trả ra sao?">Đổi trả</button>
+        <button data-q="Làm sao để liên hệ?">Liên hệ</button>
+      </div>
+      <form class="chatbot-input" id="chatbotForm">
+        <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi..." autocomplete="off">
+        <button type="submit" aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+</html>

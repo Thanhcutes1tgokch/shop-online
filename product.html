@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopOnline - Chi tiết sản phẩm chất lượng cao, giá tốt.">
+  <meta name="theme-color" content="#7C3AED">
+  <title>ShopOnline – Chi tiết sản phẩm</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><i class="fas fa-store"></i> ShopOnline</a>
+      </div>
+      <nav class="nav" id="mainNav">
+        <ul>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="index.html#products" class="active">Sản phẩm</a></li>
+          <li><a href="orders.html">Đơn hàng</a></li>
+          <li><a href="https://zalo.me/0705634177" target="_blank">Liên hệ</a></li>
+        </ul>
+      </nav>
+      <div class="cart-icon">
+        <a href="#" id="cartToggle" aria-label="Giỏ hàng">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== PRODUCT DETAIL ===== -->
+  <section class="detail-section">
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="index.html">Trang chủ</a>
+        <span class="sep">/</span>
+        <a href="index.html#products">Sản phẩm</a>
+        <span class="sep">/</span>
+        <span class="current" id="breadcrumbName">Chi tiết</span>
+      </nav>
+
+      <div class="detail-wrapper" id="productDetail">
+        <div class="detail-image">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80&auto=format&fit=crop"
+               alt="Sản phẩm" id="detailImg">
+        </div>
+
+        <div class="detail-info">
+          <div class="detail-category" id="detailCategory">Đang tải...</div>
+          <h2 id="detailName">Đang tải...</h2>
+
+          <div class="product-rating">
+            <span class="stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </span>
+            <span class="rating-count">(128 đánh giá)</span>
+          </div>
+
+          <div class="detail-price" id="detailPrice">0đ</div>
+
+          <div class="detail-divider"></div>
+
+          <p class="detail-desc" id="detailDesc">...</p>
+
+          <div class="detail-meta">
+            <div class="detail-meta-item"><i class="fas fa-truck"></i> Giao trong 2–3 ngày</div>
+            <div class="detail-meta-item"><i class="fas fa-redo"></i> Đổi trả 7 ngày</div>
+            <div class="detail-meta-item"><i class="fas fa-shield-alt"></i> Hàng chính hãng</div>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn btn-primary" id="addToCartDetail">
+              <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+            </button>
+            <a href="index.html#products" class="btn btn-outline">
+              <i class="fas fa-arrow-left"></i> Tiếp tục mua
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 ShopOnline – Made with <i class="fas fa-heart" style="color:#EC4899;"></i> by Trần Công Thành</p>
+      <div class="footer-contact">
+        <a href="https://zalo.me/0705634177" target="_blank"><i class="fas fa-comment"></i> Zalo: 0705634177</a>
+        <a href="mailto:dtc235200687@ictu.edu.vn"><i class="fas fa-envelope"></i> dtc235200687@ictu.edu.vn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== CART SIDEBAR ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-bag"></i> Giỏ hàng của bạn</h3>
+      <button class="close-cart" id="closeCart" aria-label="Đóng">&times;</button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng tiền:</span>
+        <span id="cartTotal">0đ</span>
+      </div>
+      <a href="checkout.html" class="btn btn-success btn-full">
+        <i class="fas fa-lock"></i> Thanh toán ngay
+      </a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== CHATBOT ===== -->
+  <div class="chatbot" id="chatbot">
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Mở chat">
+      <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="chatbot-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+          <h4>ShopOnline Assistant</h4>
+          <span class="chatbot-status">● Trực tuyến</span>
+        </div>
+        <button class="chatbot-close" id="chatbotClose">&times;</button>
+      </div>
+      <div class="chatbot-body" id="chatbotBody"></div>
+      <div class="chatbot-quick">
+        <button data-q="Giá sản phẩm như thế nào?">Giá cả</button>
+        <button data-q="Phí vận chuyển thế nào?">Vận chuyển</button>
+        <button data-q="Chính sách đổi trả ra sao?">Đổi trả</button>
+        <button data-q="Làm sao để liên hệ?">Liên hệ</button>
+      </div>
+      <form class="chatbot-input" id="chatbotForm">
+        <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi..." autocomplete="off">
+        <button type="submit" aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+</html>

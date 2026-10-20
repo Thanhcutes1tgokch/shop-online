@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopOnline - Thanh toán đơn hàng nhanh chóng, an toàn với COD, chuyển khoản, MoMo, ZaloPay.">
+  <meta name="theme-color" content="#6c63ff">
+  <title>ShopOnline – Thanh toán</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="checkout-page">
+
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><i class="fas fa-store"></i> ShopOnline</a>
+      </div>
+      <nav class="nav">
+        <ul>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="index.html#products">Sản phẩm</a></li>
+          <li><a href="orders.html">Đơn hàng</a></li>
+          <li><a href="https://zalo.me/0705634177" target="_blank" id="navContact">Liên hệ</a></li>
+        </ul>
+      </nav>
+      <div class="cart-icon">
+        <a href="index.html">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <section class="checkout-hero">
+    <div class="container">
+      <h1><i class="fas fa-shield-alt"></i> Thanh toán đơn hàng</h1>
+      <p>Điền thông tin và xác nhận để hoàn tất đơn hàng của bạn</p>
+      <div class="steps">
+        <a href="index.html#products" class="step done"><i class="fas fa-check"></i> <span>Giỏ hàng</span></a>
+        <span class="step-line"></span>
+        <span class="step active"><i class="fas fa-credit-card"></i> <span>Thanh toán</span></span>
+        <span class="step-line"></span>
+        <span class="step"><i class="fas fa-flag-checkered"></i> <span>Hoàn tất</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="checkout-section">
+    <div class="container checkout-layout">
+
+      <div class="checkout-form">
+        <div class="form-card">
+          <h3><i class="fas fa-user"></i> Thông tin liên hệ</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cName">Họ và tên <span class="req">*</span></label>
+              <input type="text" id="cName" placeholder="Nguyễn Văn A" required>
+            </div>
+            <div class="form-group">
+              <label for="cPhone">Số điện thoại <span class="req">*</span></label>
+              <input type="tel" id="cPhone" placeholder="0705 634 177" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cEmail">Email</label>
+            <input type="email" id="cEmail" placeholder="email@example.com">
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3><i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cCity">Tỉnh/Thành phố <span class="req">*</span></label>
+              <input type="text" id="cCity" placeholder="TP. Hồ Chí Minh" required>
+            </div>
+            <div class="form-group">
+              <label for="cDistrict">Quận/Huyện</label>
+              <input type="text" id="cDistrict" placeholder="Quận 1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cAddress">Địa chỉ chi tiết <span class="req">*</span></label>
+            <input type="text" id="cAddress" placeholder="Số nhà, tên đường..." required>
+          </div>
+          <div class="form-group">
+            <label for="cNote">Ghi chú</label>
+            <textarea id="cNote" rows="2" placeholder="Ghi chú cho cửa hàng (tùy chọn)"></textarea>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3><i class="fas fa-credit-card"></i> Phương thức thanh toán</h3>
+          <div class="payment-methods">
+            <label class="pay-method">
+              <input type="radio" name="payment" value="cod" checked>
+              <span class="pay-card">
+                <i class="fas fa-truck"></i>
+                <span><b>COD</b><small>Thanh toán khi nhận hàng</small></span>
+              </span>
+            </label>
+            <label class="pay-method">
+              <input type="radio" name="payment" value="bank">
+              <span class="pay-card">
+                <i class="fas fa-university"></i>
+                <span><b>Chuyển khoản ngân hàng</b><small>Vietcombank – chủ tài khoản ShopOnline VN</small></span>
+              </span>
+            </label>
+            <label class="pay-method">
+              <input type="radio" name="payment" value="momo">
+              <span class="pay-card">
+                <span class="pay-logo momo">MoMo</span>
+                <span><b>Ví MoMo</b><small>Quét mã hoặc chuyển đến số điện thoại</small></span>
+              </span>
+            </label>
+            <label class="pay-method">
+              <input type="radio" name="payment" value="zalopay">
+              <span class="pay-card">
+                <span class="pay-logo zalo">Zalo</span>
+                <span><b>ZaloPay</b><small>Thanh toán qua ứng dụng ZaloPay</small></span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <a href="index.html#products" class="back-link"><i class="fas fa-arrow-left"></i> Tiếp tục mua sắm</a>
+      </div>
+
+      <aside class="order-summary">
+        <h3>Đơn hàng của bạn <span class="order-count" id="orderCount">0</span></h3>
+        <div class="order-items" id="orderItems">
+          <p class="empty-text">Giỏ hàng trống. <a href="index.html#products">Mua sắm ngay</a></p>
+        </div>
+
+        <div class="summary-prices">
+          <div class="sub-row"><span>Tạm tính</span><span id="subTotal">0₫</span></div>
+          <div class="sub-row"><span>Phí vận chuyển</span><span id="shipCost"><span class="free-tag">Miễn phí</span></span></div>
+        </div>
+
+        <div class="grand-total">
+          <span>Tổng cộng</span><span id="grandTotal">0₫</span>
+        </div>
+
+        <button class="btn btn-success btn-full place-order" id="placeOrder">
+          <i class="fas fa-lock"></i> Xác nhận đơn hàng
+        </button>
+
+        <div class="trust-badges">
+          <span><i class="fas fa-shield-alt"></i> An toàn 100%</span>
+          <span><i class="fas fa-sync-alt"></i> Đổi trả 7 ngày</span>
+          <span><i class="fas fa-truck"></i> Miễn phí ship ≥ 500K</span>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 ShopOnline – Made with <i class="fas fa-heart" style="color: #fd79a8;"></i> by Trần Công Thành</p>
+      <div class="footer-contact">
+        <a href="https://zalo.me/0705634177" target="_blank"><i class="fas fa-comment"></i> Zalo: 0705634177</a>
+        <a href="mailto:dtc235200687@ictu.edu.vn"><i class="fas fa-envelope"></i> dtc235200687@ictu.edu.vn</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-check"><i class="fas fa-check"></i></div>
+      <h2>Đặt hàng thành công!</h2>
+      <p>Cảm ơn bạn đã mua sắm tại ShopOnline.</p>
+      <div class="order-code">Mã đơn hàng: <b id="orderId">#000000</b></div>
+      <div class="success-info">
+        <div><span>Phương thức:</span><b id="successPay">COD</b></div>
+        <div><span>Tổng tiền:</span><b id="successTotal">0₫</b></div>
+        <div><span>Trạng thái:</span><b class="ok-tag">Chờ xử lý</b></div>
+      </div>
+      <div class="success-actions">
+        <a href="orders.html" class="btn btn-primary"><i class="fas fa-box-open"></i> Xem đơn hàng</a>
+        <a href="index.html" class="btn btn-outline">Về trang chủ</a>
+        <a href="index.html#products" class="btn btn-outline">Mua tiếp</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
