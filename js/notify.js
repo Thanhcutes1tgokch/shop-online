@@ -1,8 +1,9 @@
-﻿/**
+/**
  * ShopOnline Notification System
  * - Chuông thông báo âm thanh (Web Audio API)
  * - Thông báo hệ điều hành / Trình duyệt (Browser Notification API)
- * - Gửi tin nhắn về Telegram của chủ shop khi có Đơn hàng / Đăng ký mới
+ * - Gửi tin nhắn về Discord Webhook (Ting ting ngay trên Discord của bạn!)
+ * - Gửi tin nhắn về Telegram Bot
  * - Trung tâm thông báo (Notification Bell) trên Header
  */
 
@@ -16,7 +17,6 @@ function playNotificationSound() {
     const ctx = new AudioCtx();
     const now = ctx.currentTime;
 
-    // Nốt thứ 1 (D5 - 587Hz)
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'sine';
@@ -28,7 +28,6 @@ function playNotificationSound() {
     osc1.start(now);
     osc1.stop(now + 0.35);
 
-    // Nốt thứ 2 (A5 - 880Hz)
     const osc2 = ctx.createOscillator();
     const gain2 = ctx.createGain();
     osc2.type = 'sine';
@@ -73,13 +72,30 @@ function sendBrowserNotification(title, body) {
   }
 }
 
-// Gửi thông báo về Telegram của chủ shop
-async function sendTelegramMessage(htmlMessage) {
-  const cfg = JSON.parse(localStorage.getItem('shopTelegramConfig') || '{}');
-  if (!cfg.botToken || !cfg.chatId) {
-    console.log('Chưa cấu hình Telegram Bot.');
+// Gửi thông báo về Discord Webhook
+async function sendDiscordMessage(payload) {
+  const cfg = JSON.parse(localStorage.getItem('shopDiscordConfig') || '{}');
+  if (!cfg.webhookUrl) return false;
+
+  try {
+    // Discord chặn CORS từ trình duyệt web, sử dụng proxy corsproxy.io để vượt qua
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cfg.webhookUrl);
+    const res = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn('Lỗi gửi Discord:', err);
     return false;
   }
+}
+
+// Gửi thông báo về Telegram Bot
+async function sendTelegramMessage(htmlMessage) {
+  const cfg = JSON.parse(localStorage.getItem('shopTelegramConfig') || '{}');
+  if (!cfg.botToken || !cfg.chatId) return false;
   try {
     const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
       method: 'POST',
@@ -148,11 +164,9 @@ function renderNotifyList() {
     </div>
   `).join('');
 
-  // Đánh dấu đã đọc khi bấm vào item
   listEl.querySelectorAll('.notify-item').forEach(el => {
     el.addEventListener('click', function () {
-      const id = this.dataset.id;
-      markAsRead(id);
+      markAsRead(this.dataset.id);
     });
   });
 }
@@ -182,7 +196,31 @@ async function notifyNewOrder(order) {
   // 2. Bắn thông báo ra màn hình máy tính / điện thoại
   sendBrowserNotification(title, body);
 
-  // 3. Gửi tin nhắn về Telegram của chủ shop
+  // 3. Gửi tin nhắn về Discord của chủ shop (Rich Embed đẹp mắt)
+  const discordPayload = {
+    username: 'ShopOnline Bot',
+    avatar_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100',
+    content: '🔔 **BẠN CÓ ĐƠN HÀNG MỚI!**',
+    embeds: [
+      {
+        title: `🎉 Đơn hàng ${order.id}`,
+        color: 8140525, // Tím #7C3AED
+        fields: [
+          { name: '👤 Khách hàng', value: order.name, inline: true },
+          { name: '📞 Số điện thoại', value: order.phone, inline: true },
+          { name: '💳 Thanh toán', value: order.payment.toUpperCase(), inline: true },
+          { name: '📍 Địa chỉ', value: `${order.address}, ${order.city}`, inline: false },
+          { name: '🛍️ Sản phẩm đã đặt', value: itemsText || 'Không có', inline: false },
+          { name: '💰 Tổng tiền', value: `**${(order.total || 0).toLocaleString('vi-VN')}đ**`, inline: true },
+          { name: '🕒 Thời gian', value: order.time, inline: true }
+        ],
+        footer: { text: 'ShopOnline Notification System' }
+      }
+    ]
+  };
+  await sendDiscordMessage(discordPayload);
+
+  // 4. Gửi tin nhắn về Telegram (nếu có cấu hình)
   const tgMsg = `<b>🛍️ CÓ ĐƠN HÀNG MỚI!</b>\n` +
     `---------------------------------\n` +
     `<b>Mã đơn:</b> ${order.id}\n` +
@@ -204,6 +242,25 @@ async function notifyNewUser(user) {
   addAppNotification('user', title, body);
   sendBrowserNotification(title, body);
 
+  // Bắn Discord
+  const discordPayload = {
+    username: 'ShopOnline Bot',
+    content: '👤 **THÀNH VIÊN MỚI ĐĂNG KÝ!**',
+    embeds: [
+      {
+        title: 'Tài khoản mới',
+        color: 4177144,
+        fields: [
+          { name: 'Họ tên', value: user.name, inline: true },
+          { name: 'SĐT', value: user.phone, inline: true },
+          { name: 'Email', value: user.email || 'Không có', inline: true }
+        ]
+      }
+    ]
+  };
+  await sendDiscordMessage(discordPayload);
+
+  // Bắn Telegram
   const tgMsg = `<b>👤 THÀNH VIÊN MỚI ĐĂNG KÝ!</b>\n` +
     `---------------------------------\n` +
     `<b>Họ tên:</b> ${user.name}\n` +
@@ -213,7 +270,6 @@ async function notifyNewUser(user) {
   await sendTelegramMessage(tgMsg);
 }
 
-// Toast phụ trợ nếu trang chưa có hàm showToast
 function showNotifyToast(msg, type = 'info') {
   if (typeof window.showToast === 'function') {
     window.showToast(msg, type);
@@ -239,40 +295,69 @@ function initNotificationUI() {
       </div>
       <div class="notify-dropdown-list" id="notifyDropdownList"></div>
       <div class="notify-dropdown-footer">
-        <button id="openTelegramSetupBtn"><i class="fab fa-telegram-plane"></i> Cài đặt Telegram nhận tin</button>
+        <button id="openBotSetupBtn"><i class="fab fa-discord"></i> Cài đặt Discord / Telegram</button>
         <button id="enableBrowserNotifyBtn"><i class="fas fa-volume-up"></i> Bật chuông đẩy</button>
       </div>
     </div>
 
-    <!-- Modal cài đặt Telegram Bot -->
-    <div class="tg-modal-overlay" id="tgModalOverlay">
+    <!-- Modal cài đặt Bot Nhận Tin (Discord & Telegram) -->
+    <div class="tg-modal-overlay" id="botModalOverlay">
       <div class="tg-modal">
         <div class="tg-modal-header">
-          <h3><i class="fab fa-telegram"></i> Cài đặt nhận tin qua Telegram</h3>
-          <button class="tg-modal-close" id="closeTgModal">&times;</button>
+          <h3><i class="fas fa-satellite-dish"></i> Cài đặt nhận thông báo đơn hàng</h3>
+          <button class="tg-modal-close" id="closeBotModal">&times;</button>
         </div>
         <div class="tg-modal-body">
-          <p>Mỗi khi có <b>khách đặt hàng</b> hoặc <b>đăng ký tài khoản</b>, thông báo sẽ tự động gửi thẳng về Telegram trên điện thoại của bạn!</p>
-          <div class="tg-form-group">
-            <label>Bot Token:</label>
-            <input type="text" id="tgBotToken" placeholder="VD: 7123456789:AAH..." />
-            <small>Lấy từ @BotFather trên Telegram</small>
+          <div class="bot-tabs" style="display:flex;gap:8px;margin-bottom:15px;">
+            <button type="button" class="btn btn-sm btn-primary active" id="tabDiscordBtn" style="flex:1;">
+              <i class="fab fa-discord"></i> Discord Webhook
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" id="tabTelegramBtn" style="flex:1;">
+              <i class="fab fa-telegram"></i> Telegram Bot
+            </button>
           </div>
-          <div class="tg-form-group">
-            <label>Chat ID của bạn:</label>
-            <input type="text" id="tgChatId" placeholder="VD: 123456789" />
-            <small>Gõ /start vào @userinfobot trên Telegram để lấy ID</small>
+
+          <!-- TAB DISCORD -->
+          <div id="discordFormSection">
+            <p style="font-size:13px;color:#4B5563;margin-bottom:12px;">
+              Mỗi khi có khách <b>đặt đơn</b> hoặc <b>đăng ký</b>, bot sẽ gửi tin nhắn "Ting ting" ngay vào kênh Discord của bạn!
+            </p>
+            <div class="tg-form-group">
+              <label>Discord Webhook URL:</label>
+              <input type="text" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..." />
+              <small>Vào Discord: Cài đặt kênh &gt; Integrations &gt; Webhooks &gt; New Webhook &gt; Copy Webhook URL</small>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:15px;">
+              <button class="btn btn-secondary" id="testDiscordBtn" type="button">Gửi thử vào Discord</button>
+              <button class="btn btn-primary" id="saveDiscordBtn" type="button">Lưu Discord Webhook</button>
+            </div>
           </div>
-        </div>
-        <div class="tg-modal-footer">
-          <button class="btn btn-secondary" id="testTgBtn">Gửi tin nhắn thử</button>
-          <button class="btn btn-primary" id="saveTgBtn">Lưu cài đặt</button>
+
+          <!-- TAB TELEGRAM -->
+          <div id="telegramFormSection" style="display:none;">
+            <p style="font-size:13px;color:#4B5563;margin-bottom:12px;">
+              Nhận thông báo qua ứng dụng Telegram.
+            </p>
+            <div class="tg-form-group">
+              <label>Bot Token:</label>
+              <input type="text" id="tgBotToken" placeholder="VD: 7123456789:AAH..." />
+              <small>Lấy từ @BotFather trên Telegram</small>
+            </div>
+            <div class="tg-form-group">
+              <label>Chat ID của bạn:</label>
+              <input type="text" id="tgChatId" placeholder="VD: 123456789" />
+              <small>Gõ /start vào @userinfobot trên Telegram để lấy ID</small>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:15px;">
+              <button class="btn btn-secondary" id="testTgBtn" type="button">Gửi thử qua Telegram</button>
+              <button class="btn btn-primary" id="saveTgBtn" type="button">Lưu Telegram</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   `;
 
-  // Sự kiện đóng mở dropdown
   const toggle = document.getElementById('notifyToggle');
   const dropdown = document.getElementById('notifyDropdown');
   if (toggle && dropdown) {
@@ -287,34 +372,99 @@ function initNotificationUI() {
     });
   }
 
-  // Đánh dấu đã đọc
   document.getElementById('markAllReadBtn')?.addEventListener('click', () => markAsRead('all'));
 
-  // Bật thông báo đẩy
   document.getElementById('enableBrowserNotifyBtn')?.addEventListener('click', () => {
     requestBrowserNotify();
     playNotificationSound();
   });
 
-  // Modal Telegram
-  const tgOverlay = document.getElementById('tgModalOverlay');
-  document.getElementById('openTelegramSetupBtn')?.addEventListener('click', () => {
+  // Modal Setup
+  const botOverlay = document.getElementById('botModalOverlay');
+  document.getElementById('openBotSetupBtn')?.addEventListener('click', () => {
     dropdown?.classList.remove('active');
-    const cfg = JSON.parse(localStorage.getItem('shopTelegramConfig') || '{}');
-    document.getElementById('tgBotToken').value = cfg.botToken || '';
-    document.getElementById('tgChatId').value = cfg.chatId || '';
-    tgOverlay?.classList.add('active');
+    const discordCfg = JSON.parse(localStorage.getItem('shopDiscordConfig') || '{}');
+    const tgCfg = JSON.parse(localStorage.getItem('shopTelegramConfig') || '{}');
+    document.getElementById('discordWebhookInput').value = discordCfg.webhookUrl || '';
+    document.getElementById('tgBotToken').value = tgCfg.botToken || '';
+    document.getElementById('tgChatId').value = tgCfg.chatId || '';
+    botOverlay?.classList.add('active');
   });
 
-  document.getElementById('closeTgModal')?.addEventListener('click', () => {
-    tgOverlay?.classList.remove('active');
+  document.getElementById('closeBotModal')?.addEventListener('click', () => {
+    botOverlay?.classList.remove('active');
   });
 
+  // Tab switcher in modal
+  const tabDiscordBtn = document.getElementById('tabDiscordBtn');
+  const tabTelegramBtn = document.getElementById('tabTelegramBtn');
+  const discordSection = document.getElementById('discordFormSection');
+  const telegramSection = document.getElementById('telegramFormSection');
+
+  tabDiscordBtn?.addEventListener('click', () => {
+    tabDiscordBtn.className = 'btn btn-sm btn-primary active';
+    tabTelegramBtn.className = 'btn btn-sm btn-outline';
+    discordSection.style.display = 'block';
+    telegramSection.style.display = 'none';
+  });
+
+  tabTelegramBtn?.addEventListener('click', () => {
+    tabTelegramBtn.className = 'btn btn-sm btn-primary active';
+    tabDiscordBtn.className = 'btn btn-sm btn-outline';
+    telegramSection.style.display = 'block';
+    discordSection.style.display = 'none';
+  });
+
+  // Lưu Discord Webhook
+  document.getElementById('saveDiscordBtn')?.addEventListener('click', () => {
+    const webhookUrl = document.getElementById('discordWebhookInput').value.trim();
+    localStorage.setItem('shopDiscordConfig', JSON.stringify({ webhookUrl }));
+    botOverlay?.classList.remove('active');
+    showNotifyToast('✅ Đã lưu cấu hình Discord Webhook!', 'success');
+  });
+
+  // Test Discord Webhook
+  document.getElementById('testDiscordBtn')?.addEventListener('click', async () => {
+    const webhookUrl = document.getElementById('discordWebhookInput').value.trim();
+    if (!webhookUrl) {
+      showNotifyToast('⚠️ Vui lòng dán link Discord Webhook trước!', 'error');
+      return;
+    }
+    showNotifyToast('⏳ Đang gửi tin nhắn thử vào Discord...', 'info');
+    try {
+      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(webhookUrl);
+      const res = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'ShopOnline Bot',
+          content: '🎉 **ShopOnline Test**: Kết nối Discord Webhook thành công! Từ giờ mọi đơn hàng sẽ gửi thẳng về kênh này.',
+          embeds: [
+            {
+              title: '🚀 Hệ thống sẵn sàng hoạt động!',
+              color: 5793266, // Xanh lá Discord
+              description: 'Khi có khách đặt hàng trên web, bạn sẽ nhận được thông báo chi tiết ngay tại đây.'
+            }
+          ]
+        })
+      });
+      if (res.ok) {
+        showNotifyToast('✅ Tin nhắn đã gửi về Discord thành công!', 'success');
+        playNotificationSound();
+      } else {
+        showNotifyToast('❌ Gửi thất bại! Vui lòng kiểm tra lại link Webhook.', 'error');
+      }
+    } catch (e) {
+      showNotifyToast('❌ Lỗi kết nối đến Discord!', 'error');
+    }
+  });
+
+  // Lưu & Test Telegram
   document.getElementById('saveTgBtn')?.addEventListener('click', () => {
     const botToken = document.getElementById('tgBotToken').value.trim();
     const chatId = document.getElementById('tgChatId').value.trim();
     localStorage.setItem('shopTelegramConfig', JSON.stringify({ botToken, chatId }));
-    tgOverlay?.classList.remove('active');
+    botOverlay?.classList.remove('active');
     showNotifyToast('✅ Đã lưu cấu hình Telegram!', 'success');
   });
 
@@ -337,10 +487,10 @@ function initNotificationUI() {
         })
       });
       if (res.ok) {
-        showNotifyToast('✅ Tin nhắn đã gửi về Telegram của bạn thành công!', 'success');
+        showNotifyToast('✅ Tin nhắn đã gửi về Telegram thành công!', 'success');
         playNotificationSound();
       } else {
-        showNotifyToast('❌ Gửi thất bại! Vui lòng kiểm tra lại Bot Token hoặc Chat ID.', 'error');
+        showNotifyToast('❌ Gửi thất bại! Vui lòng kiểm tra lại Token hoặc Chat ID.', 'error');
       }
     } catch (e) {
       showNotifyToast('❌ Lỗi kết nối mạng đến Telegram!', 'error');
@@ -353,7 +503,6 @@ function initNotificationUI() {
 
 document.addEventListener('DOMContentLoaded', initNotificationUI);
 
-// Xuất các hàm ra toàn cục
 window.playNotificationSound = playNotificationSound;
 window.requestBrowserNotify = requestBrowserNotify;
 window.sendBrowserNotification = sendBrowserNotification;
