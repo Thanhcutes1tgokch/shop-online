@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 function formatPrice(p) { return (p || 0).toLocaleString('vi-VN') + 'đ'; }
 

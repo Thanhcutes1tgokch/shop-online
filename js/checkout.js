@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /* ---------- Đọc giỏ hàng từ localStorage (chung với main.js) ---------- */
 let cart = [];
@@ -103,6 +103,11 @@ document.getElementById('placeOrder').addEventListener('click', function () {
   localStorage.setItem('orders', JSON.stringify(orders));
   localStorage.removeItem('cart');
   cart = [];
+
+  // Bắn thông báo âm thanh, Web Push & Telegram cho chủ shop
+  if (typeof window.notifyNewOrder === 'function') {
+    window.notifyNewOrder(order);
+  }
 
   document.getElementById('orderId').textContent = order.id;
   document.getElementById('successPay').textContent = payLabel.toUpperCase();

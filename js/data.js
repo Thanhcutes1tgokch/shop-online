@@ -1,4 +1,4 @@
-const DEFAULT_PRODUCTS = [
+﻿const DEFAULT_PRODUCTS = [
   {
     id: 1,
     name: "Áo thun Unisex",

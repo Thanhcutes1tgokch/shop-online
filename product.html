@@ -29,15 +29,19 @@
           <li><a href="https://zalo.me/0705634177" target="_blank">Liên hệ</a></li>
         </ul>
       </nav>
-      <div class="cart-icon">
-        <a href="#" id="cartToggle" aria-label="Giỏ hàng">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-badge" id="cartCount">0</span>
-        </a>
+      <div class="header-actions">
+        <div class="notify-wrapper" id="notifyWrapper"></div>
+        <div class="user-menu-wrapper" id="userMenuWrapper"></div>
+        <div class="cart-icon">
+          <a href="#" id="cartToggle" aria-label="Giỏ hàng">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+          </a>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
-      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
-        <i class="fas fa-bars"></i>
-      </button>
     </div>
   </header>
 
@@ -158,6 +162,8 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/notify.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
   <script src="js/chatbot.js"></script>
 </body>
