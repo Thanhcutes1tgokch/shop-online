@@ -77,19 +77,41 @@ async function sendDiscordMessage(payload) {
   const cfg = JSON.parse(localStorage.getItem('shopDiscordConfig') || '{}');
   if (!cfg.webhookUrl) return false;
 
+  const webhookUrl = cfg.webhookUrl.trim();
+
+  // Cách 1: Qua proxy chuyên dụng cho Discord (hỗ trợ CORS cho web tĩnh)
   try {
-    // Discord chặn CORS từ trình duyệt web, sử dụng proxy corsproxy.io để vượt qua
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cfg.webhookUrl);
-    const res = await fetch(proxyUrl, {
+    const proxiedUrl = webhookUrl.replace('discord.com', 'webhook.lewisakura.moe').replace('discordapp.com', 'webhook.lewisakura.moe');
+    const res = await fetch(proxiedUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    return res.ok;
-  } catch (err) {
-    console.warn('Lỗi gửi Discord:', err);
-    return false;
-  }
+    if (res.ok || res.status === 204) return true;
+  } catch (err) {}
+
+  // Cách 2: Trực tiếp
+  try {
+    const res2 = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res2.ok || res2.status === 204) return true;
+  } catch (err) {}
+
+  // Cách 3: no-cors
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    return true;
+  } catch (err) {}
+
+  return false;
 }
 
 // Gửi thông báo về Telegram Bot

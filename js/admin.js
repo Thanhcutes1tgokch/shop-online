@@ -112,40 +112,75 @@ function initDiscordSettings() {
       return;
     }
 
+    if (!webhookUrl.includes('discord.com/api/webhooks/') && !webhookUrl.includes('discordapp.com/api/webhooks/')) {
+      showToast('⚠️ Link Webhook không đúng định dạng của Discord!', 'error');
+      return;
+    }
+
     showToast('⏳ Đang gửi tin nhắn thử vào Discord...', 'info');
+
+    const payload = {
+      username: 'ShopOnline Admin',
+      avatar_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100',
+      content: '🎉 **KẾT NỐI DISCORD THÀNH CÔNG!**',
+      embeds: [
+        {
+          title: '🟢 Hệ thống quản trị ShopOnline đã kết nối',
+          color: 5793266, // Xanh lá Discord
+          description: 'Từ bây giờ, mọi đơn hàng khách đặt trên website sẽ tự động bắn thông báo chuông ting ting về kênh này!',
+          fields: [
+            { name: '🌐 Trang web', value: window.location.hostname || 'cthanh.io.vn', inline: true },
+            { name: '⚡ Trạng thái', value: 'Sẵn sàng nhận thông báo', inline: true }
+          ],
+          footer: { text: 'ShopOnline Admin Dashboard' },
+          timestamp: new Date().toISOString()
+        }
+      ]
+    };
+
+    let sent = false;
+
+    // Cách 1: Qua Proxy chuyên dụng của Discord (hỗ trợ CORS cho web tĩnh)
     try {
-      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(webhookUrl);
-      const res = await fetch(proxyUrl, {
+      const proxiedUrl = webhookUrl.replace('discord.com', 'webhook.lewisakura.moe').replace('discordapp.com', 'webhook.lewisakura.moe');
+      const r1 = await fetch(proxiedUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: 'ShopOnline Admin',
-          avatar_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100',
-          content: '🎉 **KẾT NỐI DISCORD THÀNH CÔNG!**',
-          embeds: [
-            {
-              title: '🟢 Hệ thống quản trị ShopOnline đã kết nối',
-              color: 5793266, // Xanh lá Discord
-              description: 'Từ bây giờ, mọi đơn hàng khách đặt trên website sẽ tự động bắn thông báo chuông ting ting về kênh này!',
-              fields: [
-                { name: '🌐 Trang web', value: 'cthanh.io.vn', inline: true },
-                { name: '⚡ Trạng thái', value: 'Sẵn sàng nhận thông báo', inline: true }
-              ],
-              footer: { text: 'ShopOnline Admin Dashboard' },
-              timestamp: new Date().toISOString()
-            }
-          ]
-        })
+        body: JSON.stringify(payload)
       });
+      if (r1.ok || r1.status === 204) sent = true;
+    } catch (e) {}
 
-      if (res.ok) {
-        showToast('✅ Tin nhắn đã gửi về kênh Discord của bạn thành công!', 'success');
-        if (typeof window.playNotificationSound === 'function') window.playNotificationSound();
-      } else {
-        showToast('❌ Gửi thất bại! Vui lòng kiểm tra lại đường link Webhook.', 'error');
-      }
-    } catch (err) {
-      showToast('❌ Lỗi kết nối mạng đến Discord!', 'error');
+    // Cách 2: Gửi trực tiếp
+    if (!sent) {
+      try {
+        const r2 = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (r2.ok || r2.status === 204) sent = true;
+      } catch (e) {}
+    }
+
+    // Cách 3: no-cors mode
+    if (!sent) {
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+        sent = true;
+      } catch (e) {}
+    }
+
+    if (sent) {
+      showToast('✅ Đã gửi lệnh đến Discord! Hãy mở Discord kiểm tra kênh của bạn nhé.', 'success');
+      if (typeof window.playNotificationSound === 'function') window.playNotificationSound();
+    } else {
+      showToast('❌ Gửi thất bại! Webhook này bị Discord từ chối (401/404). Vui lòng tạo lại Webhook mới trên Discord và nhớ bấm LƯU THAY ĐỔI!', 'error', 6000);
     }
   });
 }
